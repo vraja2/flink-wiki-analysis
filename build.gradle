@@ -7,6 +7,10 @@
  * user guide available at https://docs.gradle.org/2.11/userguide/tutorial_java_projects.html
  */
 
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 
