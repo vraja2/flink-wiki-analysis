@@ -42,16 +42,13 @@ public class WikipediaAnalysis {
                 }
             });
 
-        FlinkKafkaProducer011 producer =
-            new FlinkKafkaProducer011<>("localhost:9092", "wiki-result", new SimpleStringSchema());
-
         // Sink to Kafka
-        result.map(new MapFunction<Tuple2<String,Long>, Object>() {
+        result.map(new MapFunction<Tuple2<String,Long>, String>() {
             @Override
             public String map(Tuple2<String, Long> tuple) {
                 return tuple.toString();
             }
-        }).addSink(producer);
+        }).addSink(new FlinkKafkaProducer011<>("localhost:9092", "wiki-result", new SimpleStringSchema()));
 
         see.execute();
     }
