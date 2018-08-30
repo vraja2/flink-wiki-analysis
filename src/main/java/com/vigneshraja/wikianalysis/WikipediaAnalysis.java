@@ -1,12 +1,15 @@
 package com.vigneshraja.wikianalysis;
 
 import org.apache.flink.api.common.functions.FoldFunction;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011;
 import org.apache.flink.streaming.connectors.wikiedits.WikipediaEditEvent;
 import org.apache.flink.streaming.connectors.wikiedits.WikipediaEditsSource;
 
@@ -39,7 +42,16 @@ public class WikipediaAnalysis {
                 }
             });
 
-        result.print();
+        FlinkKafkaProducer011 producer =
+            new FlinkKafkaProducer011<>("localhost:9092", "wiki-result", new SimpleStringSchema());
+
+        // Sink to Kafka
+        result.map(new MapFunction<Tuple2<String,Long>, Object>() {
+            @Override
+            public String map(Tuple2<String, Long> tuple) {
+                return tuple.toString();
+            }
+        }).addSink(producer);
 
         see.execute();
     }

@@ -30,6 +30,7 @@ dependencies {
     compile "org.apache.flink:flink-streaming-java_2.11:$flinkVersion"
     compile "org.apache.flink:flink-clients_2.11:$flinkVersion"
     compile "org.apache.flink:flink-connector-wikiedits_2.11:$flinkVersion"
+    compile "org.apache.flink:flink-connector-kafka-0.11_2.11:$flinkVersion"
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
